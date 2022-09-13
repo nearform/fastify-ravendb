@@ -1,5 +1,6 @@
 node_modules
 .eslintcache
+.nyc_output
 
 # JetBrains IDEs
 .idea
@@ -8,3 +9,6 @@ node_modules
 
 # OS X
 .DS_Store
+
+# RavenDB Docker data volume
+ravendb-data
