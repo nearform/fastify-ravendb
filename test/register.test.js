@@ -3,7 +3,9 @@ import { DocumentStore } from 'ravendb'
 import Fastify from 'fastify'
 
 import plugin from '../index.js'
-import { url, databaseName } from './helpers.js'
+
+const url = 'http://dummy.db'
+const databaseName = 'test'
 
 test('Should register with no name', async t => {
   const fastify = Fastify()
