@@ -73,7 +73,6 @@ test('Should throw when register is called with a reserved name', async t => {
 
 test('Should register with a custom collection mapping function', async t => {
   const findCollectionNameForObjectLiteral = e => e.collection
-  const person = { name: 'John Doe', collection: 'People' }
 
   const fastify = Fastify()
 
@@ -83,8 +82,8 @@ test('Should register with a custom collection mapping function', async t => {
     findCollectionNameForObjectLiteral
   })
 
-  t.equal(
-    fastify.rvn.conventions.findCollectionNameForObjectLiteral(person),
-    'People'
+  t.match(
+    fastify.rvn.conventions.findCollectionNameForObjectLiteral,
+    findCollectionNameForObjectLiteral
   )
 })
