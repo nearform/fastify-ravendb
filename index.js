@@ -12,14 +12,6 @@ function fastifyRaven(fastify, options, next) {
 
   const documentStore = new DocumentStore(url, databaseName, authOptions)
 
-  if (findCollectionNameForObjectLiteral instanceof Function) {
-    Object.assign(documentStore.conventions, {
-      findCollectionNameForObjectLiteral
-    })
-  }
-
-  documentStore.initialize()
-
   if (name) {
     if (documentStore[name]) {
       return next(new Error(`fastify-ravendb '${name}' is a reserved keyword`))
@@ -45,6 +37,14 @@ function fastifyRaven(fastify, options, next) {
       fastify.decorate('rvn', documentStore)
     }
   }
+
+  if (findCollectionNameForObjectLiteral instanceof Function) {
+    Object.assign(documentStore.conventions, {
+      findCollectionNameForObjectLiteral
+    })
+  }
+
+  documentStore.initialize()
 
   next()
 }
