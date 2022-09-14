@@ -1,7 +1,7 @@
 import { DocumentStore } from 'ravendb'
 import fp from 'fastify-plugin'
 
-function fastifyRaven(fastify, options, next) {
+async function fastifyRaven(fastify, options) {
   const {
     name,
     url,
@@ -14,14 +14,12 @@ function fastifyRaven(fastify, options, next) {
 
   if (name) {
     if (documentStore[name]) {
-      return next(new Error(`fastify-ravendb '${name}' is a reserved keyword`))
+      throw new Error(`fastify-ravendb '${name}' is a reserved keyword`)
     } else if (!fastify.rvn) {
       fastify.decorate('rvn', Object.create(null))
     } else if (fastify.rvn[name]) {
-      return next(
-        new Error(
-          `fastify-ravendb '${name}' instance name has already been registered`
-        )
+      throw new Error(
+        `fastify-ravendb '${name}' instance name has already been registered`
       )
     }
 
@@ -29,7 +27,7 @@ function fastifyRaven(fastify, options, next) {
   } else {
     if (fastify.rvn) {
       if (fastify.rvn.initialize) {
-        return next(new Error('fastify-ravendb has already been registered'))
+        throw new Error('fastify-ravendb has already been registered')
       }
 
       Object.assign(fastify.rvn, documentStore)
@@ -45,11 +43,9 @@ function fastifyRaven(fastify, options, next) {
   }
 
   documentStore.initialize()
-
-  next()
 }
 
 export default fp(fastifyRaven, {
   fastify: '4.x',
-  name: '@fastify/ravendb'
+  name: 'fastify-ravendb'
 })
