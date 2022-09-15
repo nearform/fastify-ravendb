@@ -3,7 +3,15 @@
   "version": "0.0.1",
   "description": "Fastify RavenDB connection plugin",
   "main": "index.js",
+  "types": "index.d.ts",
   "type": "module",
+  "engines": {
+    "node": ">= 14"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
   "config": {
     "docker": {
       "port": 8080
@@ -18,7 +26,8 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky install",
-    "test": "npm run test:unit",
+    "test": "npm run test:unit && npm run test:types",
+    "test:types": "tsd",
     "test:unit": "c8 --100 tap -J --no-coverage test/*.test.js"
   },
   "repository": {
@@ -49,6 +58,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
+    "@tsconfig/node14": "^1.0.3",
     "c8": "^7.12.0",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
@@ -58,9 +68,13 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "ravendb": "^5.2.7",
-    "tap": "^16.3.0"
+    "tap": "^16.3.0",
+    "tsd": "^0.24.0"
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint --cache --fix"
+  },
+  "tsd": {
+    "directory": "test/types"
   }
 }
