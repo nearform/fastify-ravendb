@@ -29,9 +29,9 @@ You can pass the following options when registering the plugin (all of them are 
 
 | Parameter | Example | Description |
 | --- | --- | --- |
-| `name` | `db1` | Specific name for the `DocumentStore`. Please check [Name option](#name-option) for more information.
+| `name` | `db1` | Specific name for the `DocumentStore` instance. Please check [Name option](#name-option) for more information.
 | `url` (required) | `http://live-test.ravendb.net` | RavenDB server URL. Same as in [ravendb#getting-started](https://github.com/ravendb/ravendb-nodejs-client#getting-started).
-| `databaseName` | `test` | Database name. Same as in [ravendb#getting-started](https://github.com/ravendb/ravendb-nodejs-client#getting-started).
+| `databaseName` (required) | `test` | Database name. Same as in [ravendb#getting-started](https://github.com/ravendb/ravendb-nodejs-client#getting-started).
 | `authOptions` | `{ certificate: fs.readFileSync(certificate), type: 'pem' }` | Authentication options (i.e. certificate and password). Same as in [ravendb#working-with-secured-server](https://github.com/ravendb/ravendb-nodejs-client#working-with-secured-server).
 | `findCollectionNameForObjectLiteral` | `e => e._collection` | A function to extract the target collection from an object literal entity. Same as in [ravendb#using-object-literals-for-entities](https://github.com/ravendb/ravendb-nodejs-client#using-object-literals-for-entities).
 
