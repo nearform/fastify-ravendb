@@ -1,34 +1,64 @@
 {
-  "name": "bench-template",
-  "version": "1.0.0",
-  "description": "Template to start a new repository on the bench",
+  "name": "fastify-ravendb",
+  "version": "0.0.1",
+  "description": "Fastify RavenDB connection plugin",
   "main": "index.js",
   "type": "module",
+  "config": {
+    "docker": {
+      "port": 8080
+    }
+  },
   "scripts": {
+    "docker": "npm run docker:data && npm run docker:run",
+    "docker:data": "rm -rf ravendb-data && tar -xf ravendb-data.tgz",
+    "docker:remove": "docker rm -f fastify-ravendb",
+    "docker:run": "docker run -p $npm_package_config_docker_port:8080 --name fastify-ravendb -e RAVEN_ARGS='--Setup.Mode=None' -e RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork -v $(pwd)/ravendb-data:/opt/RavenDB/Server/RavenData -d ravendb/ravendb:ubuntu-latest && npm run docker:url",
+    "docker:url": "echo You can access RavenDB Management Studio on http://localhost:$npm_package_config_docker_port",
     "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 0",
-    "prepare": "husky install"
+    "lint:fix": "npm run lint -- --fix",
+    "prepare": "husky install",
+    "test": "npm run test:unit",
+    "test:unit": "c8 --100 tap -J --no-coverage test/*.test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nearform/bench-template.git"
+    "url": "git+https://github.com/nearform/fastify-ravendb.git"
   },
-  "keywords": [],
+  "keywords": [
+    "fastify",
+    "raven",
+    "ravendb",
+    "database",
+    "connection",
+    "nosql"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nearform/bench-template/issues"
+    "url": "https://github.com/nearform/fastify-ravendb/issues"
   },
-  "homepage": "https://github.com/nearform/bench-template#readme",
+  "homepage": "https://github.com/nearform/fastify-ravendb#readme",
+  "peerDependencies": {
+    "fastify": "4.x",
+    "ravendb": ">=5.2.7"
+  },
+  "dependencies": {
+    "fastify-plugin": "^4.2.1"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
+    "c8": "^7.12.0",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "fastify": "^4.5.3",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "ravendb": "^5.2.7",
+    "tap": "^16.3.0"
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint --cache --fix"
