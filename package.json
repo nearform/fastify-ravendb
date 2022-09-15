@@ -4,6 +4,12 @@
   "description": "Fastify RavenDB connection plugin",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": ">= 14"
+  },
+  "files": [
+    "index.js"
+  ],
   "config": {
     "docker": {
       "port": 8080
