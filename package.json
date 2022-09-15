@@ -1,6 +1,6 @@
 {
   "name": "fastify-ravendb",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Fastify RavenDB connection plugin",
   "main": "index.js",
   "types": "index.d.ts",
