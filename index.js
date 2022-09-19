@@ -48,6 +48,10 @@ const fastifyRaven = async (fastify, options) => {
   }
 
   documentStore.initialize()
+
+  fastify.addHook('onClose', () => {
+    documentStore.dispose()
+  })
 }
 
 export default fp(fastifyRaven, {
