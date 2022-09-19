@@ -1,3 +1,4 @@
+import sinon from 'sinon'
 import { test } from 'tap'
 import { DocumentStore } from 'ravendb'
 import Fastify from 'fastify'
@@ -88,4 +89,16 @@ test('Should register with a custom collection mapping function', async t => {
     fastify.rvn.conventions.findCollectionNameForObjectLiteral,
     findCollectionNameForObjectLiteral
   )
+})
+
+test('Should be disposed on close', async () => {
+  const fastify = Fastify()
+
+  await fastify.register(plugin, { url, databaseName })
+
+  const disposeSpy = sinon.spy(fastify.rvn, 'dispose')
+
+  await fastify.close()
+
+  sinon.assert.calledOnce(disposeSpy)
 })
