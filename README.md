@@ -128,8 +128,7 @@ It will output something similar to this:
 > fastify-ravendb@1.0.0 docker:data /Users/brianbaidal/Documents/git/fastify-ravendb
 > ./scripts/create-data.sh $npm_package_config_docker_port
 
-Connection to localhost port 8080 [tcp/http-alt] succeeded!
-{"RaftCommandIndex":2,"Name":"test","Topology":{"Members":["A"],"Promotables":[],"Rehabs":[],"Stamp":{"Index":2,"Term":1,"LeadersTicks":-2},"NodesModifiedAt":"2022-09-19T13:32:22.8543430Z","PromotablesStatus":{},"DemotionReasons":{},"DynamicNodesDistribution":false,"ReplicationFactor":1,"DatabaseTopologyIdBase64":"eINL6sJXAUmi9pZ9YbKoBA","ClusterTransactionIdBase64":"BlN7lAU/lEaTgJvaWmC0/g","PriorityOrder":[]},"NodesAddedTo":["http://5df67a5eb278:8080"]}{"Results":[{"Type":"PUT","@id":"test","@collection":"@empty","@change-vector":"A:1-gMhPWluBnUaVjiNCZrYMsQ","@last-modified":"2022-09-19T13:32:23.5410160Z"}]}
+{"RaftCommandIndex":2,"Name":"test","Topology":{"Members":["A"],"Promotables":[],"Rehabs":[],"Stamp":{"Index":2,"Term":1,"LeadersTicks":-2},"NodesModifiedAt":"2022-09-19T13:56:10.8938260Z","PromotablesStatus":{},"DemotionReasons":{},"DynamicNodesDistribution":false,"ReplicationFactor":1,"DatabaseTopologyIdBase64":"9iRu52Sau02gwkZkYZGCKQ","ClusterTransactionIdBase64":"m7lPdRLMGkqeuGb/XHItvg","PriorityOrder":[]},"NodesAddedTo":["http://4bf4401dd524:8080"]}{"Results":[{"Type":"PUT","@id":"test","@collection":"@empty","@change-vector":"A:1-m6zmrzFDFECF1rltvWzY+A","@last-modified":"2022-09-19T13:56:11.4895130Z"}]}
 > fastify-ravendb@1.0.0 docker:url /Users/brianbaidal/Documents/git/fastify-ravendb
 > echo You can access RavenDB Management Studio on http://localhost:$npm_package_config_docker_port
 
