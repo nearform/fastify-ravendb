@@ -19,10 +19,10 @@
   },
   "scripts": {
     "docker": "npm run docker:run && npm run docker:data && npm run docker:url",
-    "docker:admin": "docker exec -it fastify-ravendb ./rvn admin-channel",
+    "docker:admin": "docker exec -it $npm_package_name ./rvn admin-channel",
     "docker:data": "./scripts/create-data.sh $npm_package_config_docker_port",
-    "docker:remove": "docker rm -f fastify-ravendb",
-    "docker:run": "docker run -p $npm_package_config_docker_port:8080 --name fastify-ravendb -e RAVEN_ARGS='--Setup.Mode=None' -e RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork -d ravendb/ravendb:ubuntu-latest",
+    "docker:remove": "docker rm -f $npm_package_name",
+    "docker:run": "docker run -p $npm_package_config_docker_port:8080 --name $npm_package_name -e RAVEN_ARGS='--Setup.Mode=None' -e RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork -d ravendb/ravendb:ubuntu-latest",
     "docker:url": "echo You can access RavenDB Management Studio on http://localhost:$npm_package_config_docker_port",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
