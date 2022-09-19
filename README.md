@@ -116,20 +116,21 @@ npm run docker
 
 It will output something similar to this:
 ```bash
-> fastify-ravendb@0.0.1 docker
-> npm run docker:data && npm run docker:run
+> fastify-ravendb@1.0.0 docker /Users/brianbaidal/Documents/git/fastify-ravendb
+> npm run docker:run && npm run docker:data && npm run docker:url
 
 
-> fastify-ravendb@0.0.1 docker:data
-> rm -rf ravendb-data && tar -xf ravendb-data.tgz
+> fastify-ravendb@1.0.0 docker:run /Users/brianbaidal/Documents/git/fastify-ravendb
+> docker run -p $npm_package_config_docker_port:8080 --name fastify-ravendb -e RAVEN_ARGS='--Setup.Mode=None' -e RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork -d ravendb/ravendb:ubuntu-latest
 
+5df67a5eb2783e177d59c286e10150c71518def06beed05bceca3c3ef0166ede
 
-> fastify-ravendb@0.0.1 docker:run
-> docker run -p $npm_package_config_docker_port:8080 --name fastify-ravendb -e RAVEN_ARGS='--Setup.Mode=None' -e RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork -v $(pwd)/ravendb-data:/opt/RavenDB/Server/RavenData -d ravendb/ravendb:ubuntu-latest && npm run docker:url
+> fastify-ravendb@1.0.0 docker:data /Users/brianbaidal/Documents/git/fastify-ravendb
+> ./scripts/create-data.sh $npm_package_config_docker_port
 
-914aa14b8bbdafc858010ef92e9df32882f4ca14e96912c3d6030d97b04f59ee
-
-> fastify-ravendb@0.0.1 docker:url
+Connection to localhost port 8080 [tcp/http-alt] succeeded!
+{"RaftCommandIndex":2,"Name":"test","Topology":{"Members":["A"],"Promotables":[],"Rehabs":[],"Stamp":{"Index":2,"Term":1,"LeadersTicks":-2},"NodesModifiedAt":"2022-09-19T13:32:22.8543430Z","PromotablesStatus":{},"DemotionReasons":{},"DynamicNodesDistribution":false,"ReplicationFactor":1,"DatabaseTopologyIdBase64":"eINL6sJXAUmi9pZ9YbKoBA","ClusterTransactionIdBase64":"BlN7lAU/lEaTgJvaWmC0/g","PriorityOrder":[]},"NodesAddedTo":["http://5df67a5eb278:8080"]}{"Results":[{"Type":"PUT","@id":"test","@collection":"@empty","@change-vector":"A:1-gMhPWluBnUaVjiNCZrYMsQ","@last-modified":"2022-09-19T13:32:23.5410160Z"}]}
+> fastify-ravendb@1.0.0 docker:url /Users/brianbaidal/Documents/git/fastify-ravendb
 > echo You can access RavenDB Management Studio on http://localhost:$npm_package_config_docker_port
 
 You can access RavenDB Management Studio on http://localhost:8080
@@ -142,16 +143,20 @@ When you're done you can remove the container by running this:
 npm run docker:remove
 ```
 
+### Admin
+
+You can conveniently access [RavenDB CLI](https://ravendb.net/docs/article-page/4.0/csharp/server/administration/cli)'s admin channel running this while the container is up:
+```bash
+npm run docker:admin
+```
+
 ### Change port
 
 If port `8080` is already allocated in your system, you can change the `config.docker.port` attribute in the package.json, then remove the container and start it again.
 
 ### Reset fixtures
 
-If at some point you want to reset the fixtures it can be done running this (without the container running):
-```bash
-npm run docker:data
-```
+If at some point you want to reset the fixtures you can remove the container and start again.
 
 ## License
 
