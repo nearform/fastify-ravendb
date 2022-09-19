@@ -1,7 +1,8 @@
 #!/bin/bash
 
-while ! nc -z localhost $1; do
-  sleep 0.1;
+while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:$1/admin/debug/proc/status)" != "200" ]]
+do
+  sleep 1
 done
 
 curl -s -X PUT \
