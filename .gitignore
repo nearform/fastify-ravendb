@@ -10,6 +10,3 @@ coverage
 
 # OS X
 .DS_Store
-
-# RavenDB Docker data volume
-ravendb-data
