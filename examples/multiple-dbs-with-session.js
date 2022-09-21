@@ -16,6 +16,8 @@ class Person {
   }
 }
 
+const routeOptions = { rvnSession: true }
+
 const start = async () => {
   const fastify = Fastify({ logger: true })
   await fastify.register(plugin, { name: 'local', url, databaseName })
@@ -25,19 +27,16 @@ const start = async () => {
     databaseName
   })
 
-  fastify.post(`/${categories}`, async (req, reply) => {
+  fastify.post(`/${categories}`, routeOptions, async (req, reply) => {
     const category = new Category(req.body.name, req.body.description)
 
-    const session = fastify.rvn.remote.openSession()
-    await session.store(category)
-    await session.saveChanges()
+    await req.rvn.remote.store(category)
 
     reply.send(category)
   })
 
-  fastify.get(`/${categories}/:id`, async (req, reply) => {
-    const session = fastify.rvn.remote.openSession()
-    const category = await session.load(
+  fastify.get(`/${categories}/:id`, routeOptions, async (req, reply) => {
+    const category = await req.rvn.remote.load(
       `${categories}/${req.params.id}`,
       Category
     )
@@ -45,19 +44,19 @@ const start = async () => {
     reply.send(category)
   })
 
-  fastify.post(`/${people}`, async (req, reply) => {
+  fastify.post(`/${people}`, routeOptions, async (req, reply) => {
     const person = new Person(req.body.name)
 
-    const session = fastify.rvn.local.openSession()
-    await session.store(person)
-    await session.saveChanges()
+    await req.rvn.local.store(person)
 
     reply.send(person)
   })
 
-  fastify.get(`/${people}/:id`, async (req, reply) => {
-    const session = fastify.rvn.local.openSession()
-    const person = await session.load(`${people}/${req.params.id}`, Person)
+  fastify.get(`/${people}/:id`, routeOptions, async (req, reply) => {
+    const person = await req.rvn.local.load(
+      `${people}/${req.params.id}`,
+      Person
+    )
 
     reply.send(person)
   })
