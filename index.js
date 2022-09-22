@@ -36,7 +36,7 @@ const fastifyRaven = async (fastify, options) => {
 
   fastify.addHook('onRoute', routeOptions => {
     const autoSession =
-      routeOptions && routeOptions.rvn && routeOptions.rvn.autoSession
+      routeOptions?.rvn?.autoSession
 
     if (
       !autoSession ||
