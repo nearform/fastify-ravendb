@@ -6,6 +6,8 @@ import {
   addDocumentStore,
   addHandler,
   addRequestSession,
+  autoSessionTargetsGlobalInstance,
+  autoSessionTargetsNamedInstance,
   getRequestSession
 } from './lib/helpers.js'
 
@@ -35,15 +37,14 @@ const fastifyRaven = async (fastify, options) => {
   })
 
   fastify.addHook('onRoute', routeOptions => {
-    const autoSession =
-      routeOptions?.rvn?.autoSession
+    const autoSession = routeOptions?.rvn?.autoSession
 
     if (
       !autoSession ||
-      (name && autoSession === true) ||
-      (typeof autoSession === 'string' && autoSession !== name) ||
-      (Array.isArray(routeOptions.rvn.autoSession) &&
-        !routeOptions.rvn.autoSession.includes(name))
+      !(
+        autoSessionTargetsGlobalInstance(autoSession, name) ||
+        autoSessionTargetsNamedInstance(autoSession, name)
+      )
     ) {
       return
     }
