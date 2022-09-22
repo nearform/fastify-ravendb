@@ -7,15 +7,13 @@ RavenDB plugin for Fastify. Internally it uses the official [ravendb](https://gi
 
 ## Table of contents
 
-- [fastify-ravendb](#fastify-ravendb)
-  - [Table of contents](#table-of-contents)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Examples](#examples)
-  - [Name option](#name-option)
-  - [Docker](#docker)
-  - [Testing](#testing)
-  - [License](#license)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Name option](#name-option)
+- [Docker](#docker)
+- [Testing](#testing)
+- [License](#license)
 
 ## Installation
 

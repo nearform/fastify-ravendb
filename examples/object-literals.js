@@ -15,7 +15,7 @@ const start = async () => {
 
   fastify.post(`/${people}`, async (req, reply) => {
     const person = {
-      Name: req.body.name,
+      name: req.body.name,
       _collection: people
     }
 
