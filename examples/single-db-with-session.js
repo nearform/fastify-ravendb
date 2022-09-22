@@ -4,7 +4,7 @@ import plugin from '../index.js'
 import { Person } from './lib/classes.js'
 import { port, url, databaseName, people } from './lib/constants.js'
 
-const routeOptions = { rvnSession: true }
+const routeOptions = { rvn: { autoSession: true } }
 
 const start = async () => {
   const fastify = Fastify({ logger: true })

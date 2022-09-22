@@ -4,7 +4,7 @@ import plugin from '../index.js'
 import { Category, Person } from './lib/classes.js'
 import { port, url, databaseName, categories, people } from './lib/constants.js'
 
-const routeOptions = { rvnSession: true }
+const routeOptions = { rvn: { autoSession: ['local', 'remote'] } }
 
 const start = async () => {
   const fastify = Fastify({ logger: true })
