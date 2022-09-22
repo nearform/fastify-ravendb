@@ -1,13 +1,8 @@
 import Fastify from 'fastify'
 
 import plugin from '../index.js'
-import { port, url, databaseName, people } from './constants.js'
-
-class Person {
-  constructor(name) {
-    this.Name = name
-  }
-}
+import { Person } from './lib/classes.js'
+import { port, url, databaseName, people } from './lib/constants.js'
 
 const routeOptions = { rvnSession: true }
 

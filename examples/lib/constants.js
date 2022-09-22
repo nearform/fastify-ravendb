@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs'
 
 // Workaround for ESLint not being able to parse "assert { type: 'json' }" when importing modules
-const pjsonUrl = new URL('../package.json', import.meta.url)
+const pjsonUrl = new URL('../../package.json', import.meta.url)
 const pjson = JSON.parse(readFileSync(pjsonUrl))
 
 export const port = 3000

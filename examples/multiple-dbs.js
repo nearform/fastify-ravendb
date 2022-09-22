@@ -1,20 +1,8 @@
 import Fastify from 'fastify'
 
 import plugin from '../index.js'
-import { port, url, databaseName, categories, people } from './constants.js'
-
-class Category {
-  constructor(name, description) {
-    this.Name = name
-    this.Description = description
-  }
-}
-
-class Person {
-  constructor(name) {
-    this.Name = name
-  }
-}
+import { Category, Person } from './lib/classes.js'
+import { port, url, databaseName, categories, people } from './lib/constants.js'
 
 const start = async () => {
   const fastify = Fastify({ logger: true })
