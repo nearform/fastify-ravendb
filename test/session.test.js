@@ -6,8 +6,6 @@ import Fastify from 'fastify'
 import plugin from '../index.js'
 import { url, databaseName } from './constants.js'
 
-const routeOptions = { rvnSession: true }
-
 class Person {
   constructor(name) {
     this.Name = name
@@ -33,7 +31,7 @@ test('Should create a session with no name', async t => {
 
   await fastify.register(plugin, { url, databaseName })
 
-  fastify.get('/', routeOptions, async req => {
+  fastify.get('/', { rvn: { autoSession: true } }, async req => {
     t.hasProp(req, 'rvn')
     t.ok(req.rvn instanceof DocumentSession)
   })
@@ -48,7 +46,8 @@ test('Should create a session with name', async t => {
 
   await fastify.register(plugin, { url, databaseName, name: 'extra' })
 
-  fastify.get('/', routeOptions, async req => {
+  fastify.get('/', { rvn: { autoSession: 'extra' } }, async req => {
+    t.hasProp(req, 'rvn')
     t.hasProp(req.rvn, 'extra')
     t.ok(req.rvn.extra instanceof DocumentSession)
   })
@@ -58,35 +57,18 @@ test('Should create a session with name', async t => {
   await fastify.close()
 })
 
-test('Should create a session both with no name and name', async t => {
+test('Should create sessions for multiple names', async t => {
   const fastify = Fastify()
 
-  await fastify.register(plugin, { url, databaseName })
-  await fastify.register(plugin, { url, databaseName, name: 'extra' })
+  await fastify.register(plugin, { url, databaseName, name: 'db1' })
+  await fastify.register(plugin, { url, databaseName, name: 'db2' })
 
-  fastify.get('/', routeOptions, async req => {
+  fastify.get('/', { rvn: { autoSession: ['db1', 'db2'] } }, async req => {
     t.hasProp(req, 'rvn')
-    t.ok(req.rvn instanceof DocumentSession)
-    t.hasProp(req.rvn, 'extra')
-    t.ok(req.rvn.extra instanceof DocumentSession)
-  })
-
-  await fastify.inject({ method: 'GET', url: '/' })
-
-  await fastify.close()
-})
-
-test('Should create a session both with no name and name (same as previous, but in reverse order)', async t => {
-  const fastify = Fastify()
-
-  await fastify.register(plugin, { url, databaseName, name: 'extra' })
-  await fastify.register(plugin, { url, databaseName })
-
-  fastify.get('/', routeOptions, async req => {
-    t.hasProp(req, 'rvn')
-    t.ok(req.rvn instanceof DocumentSession)
-    t.hasProp(req.rvn, 'extra')
-    t.ok(req.rvn.extra instanceof DocumentSession)
+    t.hasProp(req.rvn, 'db1')
+    t.ok(req.rvn.db1 instanceof DocumentSession)
+    t.hasProp(req.rvn, 'db2')
+    t.ok(req.rvn.db2 instanceof DocumentSession)
   })
 
   await fastify.inject({ method: 'GET', url: '/' })
@@ -95,15 +77,13 @@ test('Should create a session both with no name and name (same as previous, but 
 })
 
 test('Should return 500 when creating a session with a reserved name', async t => {
+  const name = 'maxNumberOfRequestsPerSession'
+
   const fastify = Fastify()
 
-  await fastify.register(plugin, {
-    url,
-    databaseName,
-    name: 'maxNumberOfRequestsPerSession'
-  })
+  await fastify.register(plugin, { url, databaseName, name })
 
-  fastify.get(`/`, routeOptions, async () => {})
+  fastify.get(`/`, { rvn: { autoSession: name } }, async () => {})
 
   const res = await fastify.inject({ method: 'GET', url: '/' })
 
@@ -120,7 +100,7 @@ test('Should save changes after request', async () => {
 
   await fastify.register(plugin, { url, databaseName })
 
-  fastify.post(`/`, routeOptions, async (req, reply) => {
+  fastify.post(`/`, { rvn: { autoSession: true } }, async (req, reply) => {
     saveChangesSpy = sinon.spy(req.rvn, 'saveChanges')
 
     const person = new Person(req.body.name)
@@ -148,7 +128,7 @@ test('Should create a session respecting existing handlers', async t => {
 
   fastify.get(
     '/',
-    { ...routeOptions, preHandler: async () => {} },
+    { rvn: { autoSession: true }, preHandler: async () => {} },
     async req => {
       t.ok(Array.isArray(req.context.preHandler))
       t.equal(req.context.preHandler.length, 2)
