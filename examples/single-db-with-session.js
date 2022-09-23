@@ -4,23 +4,22 @@ import plugin from '../index.js'
 import { Person } from './lib/classes.js'
 import { port, url, databaseName, people } from './lib/constants.js'
 
+const routeOptions = { rvn: { autoSession: true } }
+
 const start = async () => {
   const fastify = Fastify({ logger: true })
   await fastify.register(plugin, { url, databaseName })
 
-  fastify.post(`/${people}`, async (req, reply) => {
+  fastify.post(`/${people}`, routeOptions, async (req, reply) => {
     const person = new Person(req.body.name)
 
-    const session = fastify.rvn.openSession()
-    await session.store(person)
-    await session.saveChanges()
+    await req.rvn.store(person)
 
     reply.send(person)
   })
 
-  fastify.get(`/${people}/:id`, async (req, reply) => {
-    const session = fastify.rvn.openSession()
-    const person = await session.load(`${people}/${req.params.id}`, Person)
+  fastify.get(`/${people}/:id`, routeOptions, async (req, reply) => {
+    const person = await req.rvn.load(`${people}/${req.params.id}`, Person)
 
     reply.send(person)
   })

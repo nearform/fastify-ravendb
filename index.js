@@ -1,10 +1,15 @@
-import { readFileSync } from 'fs'
 import { DocumentStore } from 'ravendb'
 import fp from 'fastify-plugin'
 
-// Workaround for ESLint not being able to parse "assert { type: 'json' }" when importing modules
-const pjsonUrl = new URL('./package.json', import.meta.url)
-const { name: packageName } = JSON.parse(readFileSync(pjsonUrl))
+import { PACKAGE_NAME } from './lib/constants.js'
+import {
+  addDocumentStore,
+  addHandler,
+  addRequestSession,
+  autoSessionTargetsGlobalInstance,
+  autoSessionTargetsNamedInstance,
+  getRequestSession
+} from './lib/helpers.js'
 
 const fastifyRaven = async (fastify, options) => {
   const {
@@ -17,29 +22,7 @@ const fastifyRaven = async (fastify, options) => {
 
   const documentStore = new DocumentStore(url, databaseName, authOptions)
 
-  if (name) {
-    if (documentStore[name]) {
-      throw new Error(`${packageName} '${name}' is a reserved keyword`)
-    } else if (!fastify.rvn) {
-      fastify.decorate('rvn', Object.create(null))
-    } else if (fastify.rvn[name]) {
-      throw new Error(
-        `${packageName} '${name}' instance name has already been registered`
-      )
-    }
-
-    Object.assign(fastify.rvn, { [name]: documentStore })
-  } else {
-    if (fastify.rvn) {
-      if (fastify.rvn.initialize) {
-        throw new Error(`${packageName} has already been registered`)
-      }
-
-      Object.assign(fastify.rvn, documentStore)
-    } else {
-      fastify.decorate('rvn', documentStore)
-    }
-  }
+  addDocumentStore(fastify, documentStore, name)
 
   if (findCollectionNameForObjectLiteral instanceof Function) {
     Object.assign(documentStore.conventions, {
@@ -52,9 +35,44 @@ const fastifyRaven = async (fastify, options) => {
   fastify.addHook('onClose', () => {
     documentStore.dispose()
   })
+
+  fastify.addHook('onRoute', routeOptions => {
+    const autoSession = routeOptions?.rvn?.autoSession
+
+    if (
+      !autoSession ||
+      !(
+        autoSessionTargetsGlobalInstance(autoSession, name) ||
+        autoSessionTargetsNamedInstance(autoSession, name)
+      )
+    ) {
+      return
+    }
+
+    if (!fastify.hasRequestDecorator('rvn')) {
+      fastify.decorateRequest('rvn', null)
+    }
+
+    const preHandler = async req => {
+      const session = documentStore.openSession()
+
+      addRequestSession(req, session, name)
+    }
+
+    const onResponse = async req => {
+      const session = getRequestSession(req, name)
+
+      if (Object.keys(session.advanced.whatChanged()).length) {
+        await session.saveChanges()
+      }
+    }
+
+    routeOptions.preHandler = addHandler(routeOptions.preHandler, preHandler)
+    routeOptions.onResponse = addHandler(routeOptions.onResponse, onResponse)
+  })
 }
 
 export default fp(fastifyRaven, {
   fastify: '4.x',
-  name: packageName
+  name: PACKAGE_NAME
 })

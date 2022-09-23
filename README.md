@@ -9,10 +9,10 @@ RavenDB plugin for Fastify. Internally it uses the official [ravendb](https://gi
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Basic example](#basic-example)
-- [Advanced examples](#advanced-examples)
+- [Examples](#examples)
 - [Name option](#name-option)
 - [Docker](#docker)
+- [Testing](#testing)
 - [License](#license)
 
 ## Installation
@@ -23,29 +23,45 @@ npm i fastify-ravendb
 
 ## Usage
 
-Register it as any other Fastify plugin. It will add the `rvn` (same name as RavenDB's CLI tool) namespace to your Fastify instance. You can access and use it the same as you would do with any `DocumentStore` instance from the official RavenDB Node.js client.
+Register it as any other Fastify plugin. It will decorate your Fastify instance with the `rvn` (same name as RavenDB's CLI tool) object, and you can access and use it the same as you would do with any `DocumentStore` instance from the official RavenDB Node.js client.
+
+Once the plugin is registered you can also enable automatic session handling for specific routes, via the `rvn.autoSession` route option. Sessions will be automatically open in the `onRequest` hook, requests will be decorated with the `rvn` object (the session, which you can use as with any session from the official client), and any pending changes will be saved `onResponse`.
+
+### Plugin options
 
 You can pass the following options when registering the plugin (all of them are optional unless stated otherwise):
 
 | Parameter | Example | Description |
 | --- | --- | --- |
-| `name` | `db1` | Specific name for the `DocumentStore` instance. Please check [Name option](#name-option) for more information.
-| `url` (required) | `http://live-test.ravendb.net` | RavenDB server URL. Same as in [ravendb#getting-started](https://github.com/ravendb/ravendb-nodejs-client#getting-started).
-| `databaseName` (required) | `test` | Database name. Same as in [ravendb#getting-started](https://github.com/ravendb/ravendb-nodejs-client#getting-started).
+| `name` | `'db1'` | Specific name for the `DocumentStore` instance. Please check [Name option](#name-option) for more information.
+| `url` (required) | `'http://live-test.ravendb.net'` | RavenDB server URL. Same as in [ravendb#getting-started](https://github.com/ravendb/ravendb-nodejs-client#getting-started).
+| `databaseName` (required) | `'test'` | Database name. Same as in [ravendb#getting-started](https://github.com/ravendb/ravendb-nodejs-client#getting-started).
 | `authOptions` | `{ certificate: fs.readFileSync(certificate), type: 'pem' }` | Authentication options (i.e. certificate and password). Same as in [ravendb#working-with-secured-server](https://github.com/ravendb/ravendb-nodejs-client#working-with-secured-server).
 | `findCollectionNameForObjectLiteral` | `e => e._collection` | A function to extract the target collection from an object literal entity. Same as in [ravendb#using-object-literals-for-entities](https://github.com/ravendb/ravendb-nodejs-client#using-object-literals-for-entities).
 
-## Basic example
+### Route options
+
+You can pass these options when creating routes (all of them are optional):
+
+| Parameter | Examples | Description |
+| --- | --- | --- |
+| `rvn.autoSession` | `true` \|  `'test'` \| `['local', 'external']` | Whether to open sessions automatically for specific database instances. It can be a boolean to target the global instance, or a string/array of strings to target one or multiple named instances. Please check [Name option](#name-option) for more information. |
+
+## Examples
+
+### Basic example
 
 ```javascript
 import Fastify from 'fastify'
 import plugin from 'fastify-ravendb'
 
-export class Person {
+class Person {
   constructor(name) {
     this.name = name
   }
 }
+
+const routeOptions = { rvn: { autoSession: true } }
 
 const start = async () => {
   const fastify = Fastify({ logger: true })
@@ -54,19 +70,16 @@ const start = async () => {
     databaseName: 'test'
   })
 
-  fastify.post('/people', async (req, reply) => {
+  fastify.post('/people', routeOptions, async (req, reply) => {
     const person = new Person(req.body.name)
 
-    const session = fastify.rvn.openSession()
-    await session.store(person, Person)
-    await session.saveChanges()
+    await req.rvn.store(person)
 
     reply.send(person)
   })
 
-  fastify.get('/people/:id', async (req, reply) => {
-    const session = fastify.rvn.openSession()
-    const person = await session.load(`people/${req.params.id}`, Person)
+  fastify.get('/people/:id', routeOptions, async (req, reply) => {
+    const person = await req.rvn.load(`people/${req.params.id}`, Person)
 
     reply.send(person)
   })
@@ -77,7 +90,7 @@ const start = async () => {
 start()
 ```
 
-## Advanced examples
+### Advanced examples
 
 More advanced examples are provided in the [examples folder](examples/).
 
@@ -105,7 +118,7 @@ await fastify.register(plugin, {
 
 ## Docker
 
-A RavenDB Docker container with a database fixture named `test` has been provided for convenience and for using the advanced examples.
+A RavenDB Docker container with a database fixture named `test` has been provided for running tests which require a real database and for using the advanced examples.
 
 ### Run
 
@@ -156,6 +169,12 @@ If port `8080` is already allocated in your system, you can change the `config.d
 ### Reset fixtures
 
 If at some point you want to reset the fixtures you can remove the container and start again.
+
+## Testing
+
+In order to run the tests first you'll need to start the provided Docker container. Please check [Docker](#docker) for more information.
+
+While the container is up you can run the tests with `npm test`.
 
 ## License
 

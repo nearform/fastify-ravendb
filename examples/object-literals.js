@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 
 import plugin from '../index.js'
-import { port, url, databaseName, people } from './constants.js'
+import { port, url, databaseName, people } from './lib/constants.js'
 
 const start = async () => {
   const findCollectionNameForObjectLiteral = e => e._collection
@@ -15,7 +15,7 @@ const start = async () => {
 
   fastify.post(`/${people}`, async (req, reply) => {
     const person = {
-      Name: req.body.name,
+      name: req.body.name,
       _collection: people
     }
 

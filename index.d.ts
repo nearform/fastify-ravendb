@@ -1,5 +1,5 @@
 import { FastifyPluginCallback } from 'fastify';
-import { IDocumentStore, IStoreAuthOptions } from 'ravendb'
+import { IDocumentSession, IDocumentStore, IStoreAuthOptions } from 'ravendb'
 
 type IOptions = {
   /**
@@ -28,14 +28,26 @@ type IOptions = {
   findCollectionNameForObjectLiteral?: (entity: object) => string;
 }
 
+type IRouteOptions = {
+  autoSession?: boolean | string | string[];
+}
+
 declare const plugin: FastifyPluginCallback<IOptions>;
 
 declare module 'fastify' {
   export interface FastifyInstance {
     rvn: IDocumentStore & Record<string, IDocumentStore>;
   }
+
+  export interface FastifyRequest {
+    rvn?: IDocumentSession & Record<string, IDocumentSession>;
+  }
+
+  export interface RouteShorthandOptions {
+    rvn?: IRouteOptions;
+  }
 }
 
-export { plugin, IOptions };
+export { plugin, IOptions, IRouteOptions };
 
 export default plugin;
