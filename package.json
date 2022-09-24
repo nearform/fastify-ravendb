@@ -8,10 +8,6 @@
   "engines": {
     "node": ">= 14"
   },
-  "files": [
-    "index.js",
-    "index.d.ts"
-  ],
   "config": {
     "docker": {
       "port": 8080
