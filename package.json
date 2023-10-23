@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
-    "@commitlint/config-conventional": "^17.1.0",
+    "@commitlint/config-conventional": "^18.0.0",
     "@tsconfig/node14": "^1.0.3",
     "c8": "^8.0.0",
     "eslint": "^8.23.1",
