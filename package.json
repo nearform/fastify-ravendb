@@ -50,7 +50,7 @@
     "ravendb": ">=5.2.7"
   },
   "dependencies": {
-    "fastify-plugin": "^4.2.1"
+    "fastify-plugin": "^5.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.3",
