@@ -1,18 +1,17 @@
-import sinon from 'sinon'
-import { test } from 'tap'
-import { DocumentStore } from 'ravendb'
 import Fastify from 'fastify'
+import { test } from 'node:test'
+import { DocumentStore } from 'ravendb'
+import sinon from 'sinon'
 
 import plugin from '../index.js'
-import { url, databaseName } from './constants.js'
+import { databaseName, url } from './constants.js'
 
 test('Should register with no name', async t => {
   const fastify = Fastify()
 
   await fastify.register(plugin, { url, databaseName })
 
-  t.hasProp(fastify, 'rvn')
-  t.ok(fastify.rvn instanceof DocumentStore)
+  t.assert.ok(fastify.rvn instanceof DocumentStore)
 })
 
 test('Should register with name', async t => {
@@ -20,10 +19,8 @@ test('Should register with name', async t => {
 
   await fastify.register(plugin, { url, databaseName, name: 'extra' })
 
-  t.hasProp(fastify, 'rvn')
-  t.notOk(fastify.rvn instanceof DocumentStore)
-  t.hasProp(fastify.rvn, 'extra')
-  t.ok(fastify.rvn.extra instanceof DocumentStore)
+  t.assert.ok(!(fastify.rvn instanceof DocumentStore))
+  t.assert.ok(fastify.rvn.extra instanceof DocumentStore)
 })
 
 test('Should register with both no name and name', async t => {
@@ -32,10 +29,8 @@ test('Should register with both no name and name', async t => {
   await fastify.register(plugin, { url, databaseName })
   await fastify.register(plugin, { url, databaseName, name: 'extra' })
 
-  t.hasProp(fastify, 'rvn')
-  t.ok(fastify.rvn instanceof DocumentStore)
-  t.hasProp(fastify.rvn, 'extra')
-  t.ok(fastify.rvn.extra instanceof DocumentStore)
+  t.assert.ok(fastify.rvn instanceof DocumentStore)
+  t.assert.ok(fastify.rvn.extra instanceof DocumentStore)
 })
 
 test('Should register with both name and no name (same as previous, but in reverse order)', async t => {
@@ -44,10 +39,8 @@ test('Should register with both name and no name (same as previous, but in rever
   await fastify.register(plugin, { url, databaseName, name: 'extra' })
   await fastify.register(plugin, { url, databaseName })
 
-  t.hasProp(fastify, 'rvn')
-  t.notOk(fastify.rvn instanceof DocumentStore)
-  t.hasProp(fastify.rvn, 'extra')
-  t.ok(fastify.rvn.extra instanceof DocumentStore)
+  t.assert.ok(!(fastify.rvn instanceof DocumentStore))
+  t.assert.ok(fastify.rvn.extra instanceof DocumentStore)
 })
 
 test('Should throw when register is called twice with no name', async t => {
@@ -55,7 +48,9 @@ test('Should throw when register is called twice with no name', async t => {
 
   await fastify.register(plugin, { url, databaseName })
 
-  t.rejects(fastify.register(plugin, { url, databaseName }))
+  await t.assert.rejects(
+    async () => await fastify.register(plugin, { url, databaseName })
+  )
 })
 
 test('Should throw when register is called twice with the same name', async t => {
@@ -63,13 +58,19 @@ test('Should throw when register is called twice with the same name', async t =>
 
   await fastify.register(plugin, { url, databaseName, name: 'extra' })
 
-  t.rejects(fastify.register(plugin, { url, databaseName, name: 'extra' }))
+  await t.assert.rejects(
+    async () =>
+      await fastify.register(plugin, { url, databaseName, name: 'extra' })
+  )
 })
 
 test('Should throw when register is called with a reserved name', async t => {
   const fastify = Fastify()
 
-  t.rejects(fastify.register(plugin, { url, databaseName, name: 'initialize' }))
+  await t.assert.rejects(
+    async () =>
+      await fastify.register(plugin, { url, databaseName, name: 'initialize' })
+  )
 })
 
 test('Should register with a custom collection mapping function', async t => {
@@ -83,7 +84,7 @@ test('Should register with a custom collection mapping function', async t => {
     findCollectionNameForObjectLiteral
   })
 
-  t.match(
+  t.assert.deepStrictEqual(
     fastify.rvn.conventions.findCollectionNameForObjectLiteral,
     findCollectionNameForObjectLiteral
   )
