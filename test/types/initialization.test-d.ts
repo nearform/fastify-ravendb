@@ -6,9 +6,6 @@ import plugin from '../../index'
 
 const app = fastify()
 
-// Without parameters
-app.register(plugin)
-
 // Mandatory parameters
 app.register(plugin, { url: 'http://localhost', databaseName: 'test' })
 
