@@ -73,6 +73,6 @@ const fastifyRaven = async (fastify, options) => {
 }
 
 export default fp(fastifyRaven, {
-  fastify: '4.x',
+  fastify: '5.x',
   name: PACKAGE_NAME
 })
