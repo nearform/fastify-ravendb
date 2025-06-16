@@ -65,7 +65,7 @@
     "lint-staged": "^16.0.0",
     "prettier": "^3.4.2",
     "ravendb": "^7.0.0",
-    "sinon": "^20.0.0",
+    "sinon": "^21.0.0",
     "tsd": "^0.32.0"
   },
   "lint-staged": {
