@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Fastify RavenDB connection plugin",
   "main": "index.js",
-  "types": "index.d.ts",
+  "types": "types/index.d.ts",
   "type": "module",
   "engines": {
     "node": ">= 20"
@@ -24,7 +24,7 @@
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
     "test": "npm run test:unit && npm run test:types",
-    "test:types": "tsd",
+    "test:types": "tstyche",
     "test:unit": "c8 --100 node --test"
   },
   "repository": {
@@ -66,12 +66,9 @@
     "prettier": "^3.4.2",
     "ravendb": "^7.0.0",
     "sinon": "^21.0.0",
-    "tsd": "^0.32.0"
+    "tstyche": "^7.1.0"
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint --cache --fix"
-  },
-  "tsd": {
-    "directory": "test/types"
   }
 }
