@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Check linked issues
     steps:
-      - uses: nearform-actions/github-action-check-linked-issues@v1
+      - uses: nearform-actions/github-action-check-linked-issues@v1.8.3
         id: check-linked-issues
         with:
           exclude-branches: release/**, dependabot/**
