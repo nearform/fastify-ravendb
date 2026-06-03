@@ -26,6 +26,6 @@ app.register(plugin, {
 // Plugin property available
 app.after(() => {
   expect(app.rvn).type.toBeAssignableTo<IDocumentStore>()
-  expect(app.rvn['categories']!).type.toBeAssignableTo<IDocumentStore>()
-  expect(app.rvn['people']!).type.toBeAssignableTo<IDocumentStore>()
+  expect(app.rvn.categories).type.toBeAssignableFrom<IDocumentStore>()
+  expect(app.rvn.people).type.toBeAssignableFrom<IDocumentStore>()
 })
