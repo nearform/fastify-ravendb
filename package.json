@@ -25,7 +25,7 @@
     "prepare": "husky",
     "test": "npm run test:unit && npm run test:types",
     "test:types": "tsd",
-    "test:unit": "c8 --100 node --test"
+    "test:unit": "c8 --100 node --test test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -66,7 +66,7 @@
     "prettier": "^3.4.2",
     "ravendb": "^7.0.0",
     "sinon": "^21.0.0",
-    "tsd": "^0.32.0"
+    "tsd": "^0.33.0"
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint --cache --fix"
