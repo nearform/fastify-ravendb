@@ -53,7 +53,7 @@
     "fastify-plugin": "^6.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.6.0",
+    "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/js": "^10.0.1",
     "@tsconfig/node14": "^14.1.2",
