@@ -1,6 +1,6 @@
 import fastify from 'fastify'
 
-import plugin from '../../index'
+import plugin from '../../types/index.js'
 
 class Category {
   name: string

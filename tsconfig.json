@@ -1,0 +1,7 @@
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["types/**/*.d.ts", "test/types/**/*.tst.ts"]
+}
