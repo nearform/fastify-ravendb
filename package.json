@@ -5,8 +5,13 @@
   "main": "index.js",
   "types": "types/index.d.ts",
   "type": "module",
+  "files": [
+    "index.js",
+    "lib",
+    "types/index.d.ts"
+  ],
   "engines": {
-    "node": ">= 20"
+    "node": ">= 22"
   },
   "config": {
     "docker": {
@@ -56,7 +61,7 @@
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/js": "^10.0.1",
-    "@tsconfig/node14": "^14.1.2",
+    "@tsconfig/node22": "^22.0.6",
     "c8": "^12.0.0",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.0.1",
@@ -68,7 +73,8 @@
     "prettier": "^3.4.2",
     "ravendb": "^7.0.0",
     "sinon": "^22.1.0",
-    "tstyche": "^7.1.0"
+    "tstyche": "^7.1.0",
+    "typescript": "^6.0.3"
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint --cache --fix"

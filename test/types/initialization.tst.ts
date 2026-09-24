@@ -2,7 +2,7 @@ import fastify from 'fastify'
 import { IDocumentStore } from 'ravendb'
 import { expect } from 'tstyche'
 
-import plugin from './index.js'
+import plugin from '../../types/index.js'
 
 const app = fastify()
 
@@ -26,6 +26,6 @@ app.register(plugin, {
 // Plugin property available
 app.after(() => {
   expect(app.rvn).type.toBeAssignableTo<IDocumentStore>()
-  expect(app.rvn.categories).type.toBeAssignableFrom<IDocumentStore>()
-  expect(app.rvn.people).type.toBeAssignableFrom<IDocumentStore>()
+  expect(app.rvn.categories).type.toBe<IDocumentStore>()
+  expect(app.rvn.people).type.toBe<IDocumentStore>()
 })
